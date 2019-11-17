@@ -37,6 +37,7 @@ class AutoOb(threading.Thread):
       s2 = set(temp)
 
       result = list(s1.difference(s2)) # compare list,we can know that is not observing.
+      print(result)
       # try :
       for node in result:
         try:

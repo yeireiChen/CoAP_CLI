@@ -43,6 +43,7 @@ def set_table(host, topology_List):
     else:
       dictTemp[item[0]] = [item[1]]
 
+  print(dictTemp)
   topology_print(dictTemp, host)
 
 def topology_print(dictTemp, host):
@@ -240,6 +241,7 @@ def startPostScheduling():
   #     if signal is True:
   #       scheduleTable.pop(nodeKey)
   #     break
+  print(scheduleTable)
   count = 0
   while (len(scheduleTable) > 0):
     for nodeKey in scheduleTable:
@@ -247,6 +249,7 @@ def startPostScheduling():
       #   time.sleep(2)
       #   count = 0
       # count += 1
+      print(nodeKey)
       payload_data = scheduleTable[nodeKey]
       time.sleep(0.2)
       AutoPost(nodeKey, payload_data, resource, endASN).start()

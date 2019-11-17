@@ -6,6 +6,7 @@ from GetMotes import getAllMotes
 import RestCoAP
 from CoAPObserve import CoAPObserve
 from AutoOb import AutoOb
+from Blacklist import changeChannel
 
 logging.config.fileConfig(os.path.join('logging.conf'))
 log = logging.getLogger("root")
@@ -65,7 +66,7 @@ class CoAPCLI(Cmd):
     log.info("Starting CoAP command line to control centralized scheduling...")
 
     Cmd.__init__(self)
-    self.doc_header = 'Commands: \ngetallmotes \nlist \npost \npostall \nobserve \nobserveall \nobservelist \ndelete \ndeleteall \nauto \nquit'
+    self.doc_header = 'Commands: \ngetallmotes \nlist \npost \npostall \nobserve \nobserveall \nobservelist \ndelete \ndeleteall \nauto \ndo_changelist \nquit'
     self.prompt = '>'
     self.intro = '\nCoAP Command Line Tool, Welcome to use it!'
 
@@ -252,7 +253,15 @@ class CoAPCLI(Cmd):
       self.stdout.write("Updating Topology...\n")
     else:
       return self.mote_lists
-    
+  def do_changelist(self,arg):
+    if len(self.mote_lists) == 0:
+      self.stdout.write("Please run getallmotes command.\n")
+      return
+
+    changeChannel(self.border_router_Addr,self.mote_lists)
+
+
+
   def do_quit(self, arg):
     log.info("Stopping CoAPCLI...")
 

@@ -45,6 +45,8 @@ def getAllMotes(host):
       motes_List.append(motesStr[index])
       #print motesStr[index]
 
+  print(topology_table)
+
   TopologyTable.set_table(host, topology_table)
     #fo.close()
   return motes_List # return mote lists

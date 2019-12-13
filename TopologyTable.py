@@ -5,6 +5,7 @@ from NodeLocalQueue import getNodeLocalQueue
 import core.nodeinfo as NodeInfo
 import core.channelinfo as ChannelInfo
 import core.schedule as SchedulePost
+import Blacklist as Blacklist
 import time
 import operator
 import re
@@ -123,7 +124,13 @@ def topology_print(dictTemp, host):
     # init channel list
     ChannelInfo.initial_channel_list(True)
     # post scheduling to all nodes.
+    if change_topology != 0:
+      ChannelInfo.set_logicalChannel(2)
+      
     SchedulePost.StartSchedule(NodeInfo.getNodeTable())
+
+    if change_topology != 0:
+      Blacklist.changeTemp()
 
 
 

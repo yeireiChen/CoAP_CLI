@@ -1,16 +1,21 @@
 node_channel_list = []
 start_Timeslots = 50
+logical_channel = 4
+
+def set_logicalChannel(numChannel):
+  global logical_channel
+  logical_channel = numChannel
 
 def initial_channel_list(Flag):
   global node_channel_list
   if Flag :
-    node_channel_list = [[0 for i in range(16)] for j in range(151)]
+    node_channel_list = [[0 for i in range(logical_channel)] for j in range(151)]
   
 def set_channel_list(childKey, parentKey, slot_numbers):
   global node_channel_list
   if slot_numbers > 0:
     for j in range(start_Timeslots,151,2) :
-      for i in range(16) :
+      for i in range(logical_channel) :
         # print node_channel_list[j][i]
         if node_channel_list[j][i] is not 0:
           strTemp = node_channel_list[j][i].split(',')
@@ -35,7 +40,7 @@ def get_channel_list(childKey, parentKey):
   global node_channel_list
   current_Str = childKey+","+parentKey
   for j in range(start_Timeslots,151,2) :
-    for i in range(16) :
+    for i in range(logical_channel) :
       if node_channel_list[j][i] is not 0:
         strTemp = node_channel_list[j][i]
         if cmp(current_Str, strTemp) is 0:
@@ -51,7 +56,7 @@ def peek_get_channel_list(childKey, parentKey, globalQu):
   temp_count = 1
   current_Str = childKey+","+parentKey
   for j in range(start_Timeslots,151,2) :
-    for i in range(16) :
+    for i in range(logical_channel) :
       if node_channel_list[j][i] is not 0:
         strTemp = node_channel_list[j][i]
         if cmp(current_Str, strTemp) is 0:
@@ -84,7 +89,7 @@ def peek_set_channel_list(childKey, parentKey, slot_offset, channel_offset, glob
 
 def peek_next_parent_channel_list(old_parentKey, del_slot, del_channel):
   for j in range(del_slot,151) :
-    for i in range(16) :
+    for i in range(logical_channel) :
       if node_channel_list[j][i] is not 0:
         strTemp = node_channel_list[j][i].split(',')
         if cmp(old_parentKey, strTemp[0]) is 0:
@@ -98,7 +103,7 @@ def peek_next_parent_channel_list(old_parentKey, del_slot, del_channel):
 def check_parent_changed(childKey, parentKey):
   global node_channel_list
   for j in range(start_Timeslots,151,2) :
-    for i in range(16) :
+    for i in range(logical_channel) :
       # print node_channel_list[j][i]
       if node_channel_list[j][i] is not 0:
         strTemp = node_channel_list[j][i].split(',')

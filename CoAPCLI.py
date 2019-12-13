@@ -7,6 +7,8 @@ import RestCoAP
 from CoAPObserve import CoAPObserve
 from AutoOb import AutoOb
 from Blacklist import changeChannel
+from Blacklist import changeTemp
+import core.nodeinfo as NodeInfo
 
 logging.config.fileConfig(os.path.join('logging.conf'))
 log = logging.getLogger("root")
@@ -258,7 +260,10 @@ class CoAPCLI(Cmd):
       self.stdout.write("Please run getallmotes command.\n")
       return
 
-    changeChannel(self.border_router_Addr,self.mote_lists)
+    #changeChannel(self.border_router_Addr,self.mote_lists)
+    #changeChannel(NodeInfo.getMainKey(),NodeInfo.getnodeList())
+    changeTemp()
+    
 
 
 

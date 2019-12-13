@@ -26,6 +26,28 @@ def changeChannel(border, mList):
   time.sleep(0.2)
   BlackPost(node,query).start()
 
+def changeTemp():
+ #print(NodeInfo.getnodeList())
+ moteList = NodeInfo.getnodeList()[:]
+ moteList.append(NodeInfo.getMainKey())
+ querytmp = "first=14&two=18&three=22"
+ query = "asn="
+ blackEndASN = NodeInfo.getASN()
+
+ if blackEndASN is not 0:
+  	# running 60 slotframe/90s
+  blackEndASN += 9060
+  if blackEndASN % 10 is 0:
+   blackEndASN += 1
+
+ query = query + str(blackEndASN) + "&" + querytmp
+ print(query)
+
+ for node in moteList:
+  time.sleep(0.2)
+  BlackPost(node,query).start()
+
+
 
 
 

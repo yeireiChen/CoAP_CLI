@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import string
 import TopologyTable
+from core.nodeinfo import setNodeList
 
 
 def getAllMotes(host):
@@ -46,6 +47,7 @@ def getAllMotes(host):
       #print motesStr[index]
 
   print(topology_table)
+  setNodeList(motes_List)
 
   TopologyTable.set_table(host, topology_table)
     #fo.close()

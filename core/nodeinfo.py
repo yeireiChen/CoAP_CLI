@@ -1,6 +1,7 @@
 
 node_dict = {}
 old_node_dict = {}
+node_list = []
 mainKey = None
 endASN = 0
 def setMainKey(main_Key):
@@ -74,3 +75,12 @@ def updateASN(asn):
 
 def getASN():
   return endASN
+
+def setNodeList(nodeList):
+  global node_list
+  node_list = nodeList[:]
+  #print("target is")
+  #print(node_list)
+
+def getnodeList():
+  return node_list

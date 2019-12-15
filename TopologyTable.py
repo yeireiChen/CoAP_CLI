@@ -130,7 +130,7 @@ def topology_print(dictTemp, host):
     SchedulePost.StartSchedule(NodeInfo.getNodeTable())
 
     if change_topology != 0:
-      Blacklist.changeTemp()
+      Blacklist.changeChannel()
 
 
 

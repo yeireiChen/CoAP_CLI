@@ -5,12 +5,23 @@ import core.nodeinfo as NodeInfo
 from BlackPost import BlackPost
 
 
+channel = [15,18,20,22]
+blacklist = []
+channelPayload = ""
 
-def changeChannel(border, mList):
- moteList = mList[:]
- moteList.append(border)
- querytmp = "first=18&two=19&three=20"
- query = "asn="
+def makePayload():
+ global channelPayload
+ channelPayload = str(len(channel))
+ for i in range(len(channel)):
+ 	channelPayload = channelPayload +" "+str(channel[i])
+ 
+
+
+def changeChannel():
+ global channelPayload
+ makePayload()
+ 
+ query = "blacklist?asn="
  blackEndASN = NodeInfo.getASN()
 
  if blackEndASN is not 0:
@@ -19,18 +30,21 @@ def changeChannel(border, mList):
   if blackEndASN % 10 is 0:
    blackEndASN += 1
 
- query = query + str(blackEndASN) + "&" + querytmp
- print(query)
+ query = query + str(blackEndASN)
+ #print(query)
+ #print(channelPayload)
 
+ moteList = NodeInfo.getnodeList()[:]
+ moteList.append(NodeInfo.getMainKey())
  for node in moteList:
   time.sleep(0.2)
-  BlackPost(node,query).start()
+  BlackPost(node,query,channelPayload).start()
 
 def changeTemp():
  #print(NodeInfo.getnodeList())
  moteList = NodeInfo.getnodeList()[:]
  moteList.append(NodeInfo.getMainKey())
- querytmp = "first=14&two=18&three=22"
+ querytmp = "first=11&two=13&three=15"
  query = "asn="
  blackEndASN = NodeInfo.getASN()
 

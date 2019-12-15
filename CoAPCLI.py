@@ -259,10 +259,8 @@ class CoAPCLI(Cmd):
     if len(self.mote_lists) == 0:
       self.stdout.write("Please run getallmotes command.\n")
       return
-
-    #changeChannel(self.border_router_Addr,self.mote_lists)
-    #changeChannel(NodeInfo.getMainKey(),NodeInfo.getnodeList())
-    changeTemp()
+    changeChannel()
+    #changeTemp()
     
 
 

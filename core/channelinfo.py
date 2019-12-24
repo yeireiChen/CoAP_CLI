@@ -1,6 +1,11 @@
 node_channel_list = []
 start_Timeslots = 50
 logical_channel = 4
+logical_use = 0 #already schedule number
+
+def get_logicalUse(): #need +1 _2(0 1 2)
+  global logical_use
+  return logical_use
 
 def set_logicalChannel(numChannel):
   global logical_channel
@@ -12,7 +17,7 @@ def initial_channel_list(Flag):
     node_channel_list = [[0 for i in range(logical_channel)] for j in range(151)]
   
 def set_channel_list(childKey, parentKey, slot_numbers):
-  global node_channel_list
+  global node_channel_list,logical_use
   if slot_numbers > 0:
     for j in range(start_Timeslots,151,2) :
       for i in range(logical_channel) :
@@ -31,6 +36,8 @@ def set_channel_list(childKey, parentKey, slot_numbers):
           node_channel_list[j][i] = childKey+","+parentKey
           slot_numbers = slot_numbers - 1
           print "slot offset : "+str(j)+", channel offset : "+str(i)
+          if i > logical_use:
+            logical_use = i
           #print j, i
           return j, i
 

@@ -8,7 +8,7 @@ from nodeBlack import getNodeBlack
 
 counter = 380
 limit = 0.7
-sent = 0
+sent = 0 #for reset channelSequence
 lock = 0
 phyRange = 11
 nodeDataDic = {}
@@ -20,6 +20,18 @@ channelTxIndex=12
 channelAckIndex=20
 channelSize = 0
 channelPayload = ""
+
+def getChannelChanged():
+  global sent
+
+  return sent
+
+def getChannelSize():
+  global channelSize
+
+  channelSize = len(channel)
+
+  return channelSize
 
 def checkChannel():
   global sent
@@ -35,12 +47,12 @@ def checkChannel():
     tempAck = avgData[i -phyRange][2]
     temp = tempAck / tempTx;
     if(tempTx>=counter) and (limit>temp):
-      print "Chek-----is badChannel-----{} : txCount_{},AckCount{}.\n".format(i,tempTx,tempAck)
+      print "Chek-----is badChannel-----{} : txCount_{},AckCount{}.__{:.2f}\n".format(i,tempTx,tempAck,temp)
       badChannel.append(i)
       #channel.remove(i)
       sent = 1
     else:
-      print "Chek-----             -----{} : txCount_{},AckCount{}.\n".format(i,tempTx,tempAck)
+      print "Chek-----             -----{} : txCount_{},AckCount{}.__{:.2f}\n".format(i,tempTx,tempAck,temp)
 
   for i in badChannel: #remove badChannel in good channel list
     if i in channel:
@@ -92,7 +104,8 @@ def getBlackelist():
     getNodeBlack(node,"/res/blacklist")
 
   for item in nodeDataDic.keys():
-    print(nodeDataDic[item])
+    #print(nodeDataDic[item])
+    print("{} : {}".format(item,nodeDataDic[item]))
 
 
 def makePayload():
@@ -122,9 +135,18 @@ def changeChannel():
 
  moteList = NodeInfo.getnodeList()[:]
  moteList.append(NodeInfo.getMainKey())
+
+ threads = []
+ counterIn = 0
  for node in moteList:
   time.sleep(0.2)
-  BlackPost(node,query,channelPayload).start()
+  threads.append(BlackPost(node,query,channelPayload))
+  threads[counterIn].start()
+  counterIn+=1
+  #BlackPost(node,query,channelPayload).start()
+
+ for i in range(len(threads)):
+  threads[i].join()
 
 def changeTemp():
  #print(NodeInfo.getnodeList())

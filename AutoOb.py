@@ -3,6 +3,8 @@ import time
 from coapthon.client.helperclient import HelperClient
 from CoAPObserve import CoAPObserve
 from GetMotes import getAllMotes
+import core.channelinfo as ChannelInfo
+import Blacklist as Blacklist
 
 from Blacklist import getBlackelist
 from Blacklist import checkChannel 
@@ -69,10 +71,19 @@ class AutoOb(threading.Thread):
 
       if((self.counter%5)==0) and (self.counter>=5):
         print "get in here\n"
-        getBlackelist()
+        getBlackelist() #get node blacklist data
+
         sent = checkChannel()
-        if sent == 1:
-          changeChannel()
+        logical = ChannelInfo.get_logicalUse()
+        logical += 1
+        channelSize = Blacklist.getChannelSize()
+        print("logical size is :{}".format(logical))
+        print("channel size is :{}".format(channelSize))
+        if sent is 1:
+          if channelSize >= logical:
+            changeChannel()
+          else:
+            print "need to reschedule\n"
 
       self.refreshBR() # get new routing table from border router. //reSchedule or not
 

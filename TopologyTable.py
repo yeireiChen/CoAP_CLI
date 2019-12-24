@@ -110,8 +110,22 @@ def topology_print(dictTemp, host):
     print '\n'
     print "change topology count : "+str(change_topology)
     print '\n'
-    pass
-  else :
+    # Topology no change,but blacklist channelSize < scheduleLogical, need to reschedule
+    print "here\n"
+    if Blacklist.getChannelChanged() is 1:
+      print "reSchedule\n"
+      channelSize = Blacklist.getChannelSize()
+      Blacklist.changeChannel()
+
+      ChannelInfo.set_logicalChannel(channelSize)
+      ChannelInfo.initial_channel_list(True)
+      SchedulePost.StartSchedule(NodeInfo.getNodeTable())
+
+    else:
+      print "don't reSchedule\n"
+      pass
+  #pass
+  else:
     change_topology = change_topology + 1
     temp_list = topology_list
 
@@ -121,16 +135,13 @@ def topology_print(dictTemp, host):
     print '\n'
     print "change topology count : "+str(change_topology)
     print '\n'
+    if change_topology is not 0:
+      channelSize = Blacklist.getChannelSize()
+      ChannelInfo.set_logicalChannel(channelSize)
+
     # init channel list
     ChannelInfo.initial_channel_list(True)
-    # post scheduling to all nodes.
-    #if change_topology != 0:
-      #ChannelInfo.set_logicalChannel(2)
-      
     SchedulePost.StartSchedule(NodeInfo.getNodeTable())
-
-    #if change_topology != 0:
-      #Blacklist.changeChannel()
 
 
 
@@ -258,7 +269,7 @@ def startPostScheduling():
       #   time.sleep(2)
       #   count = 0
       # count += 1
-      print(nodeKey)
+      #print(nodeKey)
       payload_data = scheduleTable[nodeKey]
       time.sleep(0.2)
       AutoPost(nodeKey, payload_data, resource, endASN).start()

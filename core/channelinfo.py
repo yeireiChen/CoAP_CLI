@@ -5,7 +5,10 @@ logical_use = 0 #already schedule number
 
 def get_logicalUse(): #need +1 _2(0 1 2)
   global logical_use
-  return logical_use
+  temp = logical_use
+  logical_use = 0
+
+  return temp
 
 def set_logicalChannel(numChannel):
   global logical_channel

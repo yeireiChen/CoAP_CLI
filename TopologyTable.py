@@ -124,13 +124,13 @@ def topology_print(dictTemp, host):
     # init channel list
     ChannelInfo.initial_channel_list(True)
     # post scheduling to all nodes.
-    if change_topology != 0:
-      ChannelInfo.set_logicalChannel(2)
+    #if change_topology != 0:
+      #ChannelInfo.set_logicalChannel(2)
       
     SchedulePost.StartSchedule(NodeInfo.getNodeTable())
 
-    if change_topology != 0:
-      Blacklist.changeChannel()
+    #if change_topology != 0:
+      #Blacklist.changeChannel()
 
 
 
@@ -248,6 +248,8 @@ def startPostScheduling():
   #     if signal is True:
   #       scheduleTable.pop(nodeKey)
   #     break
+  #print('schedule logical use : {}'.format(ChannelInfo.get_logicalUse()))
+
   print(scheduleTable)
   count = 0
   while (len(scheduleTable) > 0):

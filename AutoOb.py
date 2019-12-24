@@ -4,6 +4,10 @@ from coapthon.client.helperclient import HelperClient
 from CoAPObserve import CoAPObserve
 from GetMotes import getAllMotes
 
+from Blacklist import getBlackelist
+from Blacklist import checkChannel 
+from Blacklist import changeChannel
+
 import logging
 log = logging.getLogger("AutoObserve")
 
@@ -19,6 +23,7 @@ class AutoOb(threading.Thread):
     self.signal = True
     self.countDown = int(countDown)
     self.countBR = 0
+    self.counter = 1
     return
 
   def run(self):
@@ -62,7 +67,14 @@ class AutoOb(threading.Thread):
         print (e)
         log.info("Error of count down timer... ")
 
-      self.refreshBR() # get new routing table from border router.
+      if((self.counter%5)==0) and (self.counter>=5):
+        print "get in here\n"
+        getBlackelist()
+        sent = checkChannel()
+        if sent == 1:
+          changeChannel()
+
+      self.refreshBR() # get new routing table from border router. //reSchedule or not
 
       log.info("Observe ALL Done.")
 
@@ -78,6 +90,8 @@ class AutoOb(threading.Thread):
         #   node.stop()
         #   self.mote_observe_lists.remove(node)
         #   node = None
+
+      self.counter +=1 
 
   def stop(self):
     log.info("Stoping auto observing nodes.")

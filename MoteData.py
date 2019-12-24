@@ -13,7 +13,7 @@ nodeinfo = None
 
 
 class MoteData(Base):
-    __tablename__ = 'mote_data'
+    __tablename__ = 'mote_dataBlackTest'
 
     id = Column(Integer, primary_key=True)
     mote = Column(String(200))

@@ -8,6 +8,9 @@ from CoAPObserve import CoAPObserve
 from AutoOb import AutoOb
 from Blacklist import changeChannel
 from Blacklist import changeTemp
+from Blacklist import getBlackelist
+from Blacklist import checkChannel
+from nodeBlack import getNodeBlack
 import core.nodeinfo as NodeInfo
 
 logging.config.fileConfig(os.path.join('logging.conf'))
@@ -68,7 +71,7 @@ class CoAPCLI(Cmd):
     log.info("Starting CoAP command line to control centralized scheduling...")
 
     Cmd.__init__(self)
-    self.doc_header = 'Commands: \ngetallmotes \nlist \npost \npostall \nobserve \nobserveall \nobservelist \ndelete \ndeleteall \nauto \ndo_changelist \nquit'
+    self.doc_header = 'Commands: \ngetallmotes \nlist \npost \npostall \nobserve \nobserveall \nobservelist \ndelete \ndeleteall \nauto \ndo_changelist \ndo_getblack \nquit'
     self.prompt = '>'
     self.intro = '\nCoAP Command Line Tool, Welcome to use it!'
 
@@ -264,6 +267,11 @@ class CoAPCLI(Cmd):
     
 
 
+  def do_getblack(self,arg):
+    #args = arg.split(' ')
+    #getNodeBlack(args[0],args[1])
+    getBlackelist()
+    sent = checkChannel()
 
   def do_quit(self, arg):
     log.info("Stopping CoAPCLI...")

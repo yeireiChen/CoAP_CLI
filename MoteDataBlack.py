@@ -1,5 +1,5 @@
 import logging
-log = logging.getLogger("moteData")
+log = logging.getLogger("moteDataBlack")
 
 import struct
 import datetime
@@ -13,10 +13,15 @@ nodeinfo = None
 
 
 class MoteDataBlack(Base):
-    __tablename__ = 'mote_dataBlackTest3'
+    __tablename__ = 'mote_channelDataTest'
 
     id = Column(Integer, primary_key=True)
     mote = Column(String(200))
+    start_asn = Column(Integer)
+    end_asn = Column(Integer)
+    channel = Column(Integer)
+    txCount = Column(Integer)
+    txAckCount = Column(Integer)
     created_at = Column(DateTime, default=datetime.datetime.now)
     updated_at = Column(DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
@@ -54,5 +59,6 @@ class MoteDataBlack(Base):
           #return packet_item[1]
           return 1
         else :
+          NodeInfo.updateASN(packet_item[3])  
           return packet_item
           #return 1

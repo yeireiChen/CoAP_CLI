@@ -5,8 +5,9 @@ import sys
 import core.nodeinfo as NodeInfo
 from BlackPost import BlackPost
 from nodeBlack import getNodeBlack
+from MoteDataBlack import MoteDataBlack
 
-counter = 380
+counter = 200
 limit = 0.7
 sent = 0 #for reset channelSequence
 lock = 0
@@ -20,6 +21,9 @@ channelTxIndex=12
 channelAckIndex=20
 channelSize = 0
 channelPayload = ""
+objectSave_callback = None
+
+last = [[0 for i in range(3)] for j in range(16)]
 
 def getChannelChanged():
   global sent
@@ -34,7 +38,7 @@ def getChannelSize():
   return channelSize
 
 def checkChannel():
-  global sent
+  global sent,txLast,AckLast,last
   avgData = [[0 for i in range(3)] for j in range(16)]
   for keys in nodeDataDic.keys(): #nodes
     nodeData = nodeDataDic[keys]
@@ -45,14 +49,19 @@ def checkChannel():
   for i in channel:
     tempTx = avgData[i -phyRange][1]
     tempAck = avgData[i -phyRange][2]
+    lastTx = avgData[i -phyRange][1] - last[i -phyRange][1]
+    lastAck = avgData[i -phyRange][2] - last[i -phyRange][2]
     temp = tempAck / tempTx;
     if(tempTx>=counter) and (limit>temp):
-      print "Chek-----is badChannel-----{} : txCount_{},AckCount{}.__{:.2f}\n".format(i,tempTx,tempAck,temp)
+      print "Chek-----is badChannel-----{} : txCount_{},AckCount_{},lastTx_{},lastAck{}.__{:.2f}\n".format(i,tempTx,tempAck,lastTx,lastAck,temp)
       badChannel.append(i)
       #channel.remove(i)
       sent = 1
     else:
-      print "Chek-----             -----{} : txCount_{},AckCount{}.__{:.2f}\n".format(i,tempTx,tempAck,temp)
+      print "Chek-----             -----{} : txCount_{},AckCount_{},lastTx_{},lastAck{}..__{:.2f}\n".format(i,tempTx,tempAck,lastTx,lastAck,temp)
+
+    last[i -phyRange][1] = avgData[i -phyRange][1]
+    last[i -phyRange][2] = avgData[i -phyRange][2]
 
   for i in badChannel: #remove badChannel in good channel list
     if i in channel:
@@ -64,11 +73,12 @@ def checkChannel():
 
 
 def save_data(node,data):
-  global channelSize
+  global channelSize,objectSave_callback
   print(data)
   channelSize = data[1]
   print("channelsize is ",data[1])
 
+  storeData = []
   if node in nodeDataDic.keys():
     tempData = nodeDataDic[node]
     for i in range(channelSize):
@@ -81,6 +91,21 @@ def save_data(node,data):
       #print "got here\n"
       #print (data[channelTxIndex+i])
       tempData[tempChannel -phyRange][2] = data[channelAckIndex+i]
+
+      #store to DB
+      channel_data = MoteDataBlack(
+                      mote = node,
+                      start_asn = data[2], #2
+                      end_asn = data[3], #3
+                      channel = tempChannel,
+                      txCount = data[channelTxIndex+i],
+                      txAckCount = data[channelAckIndex+i],
+                    )
+      storeData.append(channel_data)
+
+    for i in storeData:
+      objectSave_callback(i)
+
   else:
     channelData = [[0 for i in range(3)] for j in range(16)]
     for i in range(channelSize):
@@ -91,11 +116,29 @@ def save_data(node,data):
       channelData[tempChannel -phyRange][0] = tempChannel
       channelData[tempChannel -phyRange][1] = data[channelTxIndex+i]
       channelData[tempChannel -phyRange][2] = data[channelAckIndex+i]
+
+      #store to DB
+      channel_data = MoteDataBlack(
+                      mote = node,
+                      start_asn = data[2], #2
+                      end_asn = data[3], #3
+                      channel = tempChannel,
+                      txCount = data[channelTxIndex+i],
+                      txAckCount = data[channelAckIndex+i],
+                    )
+      storeData.append(channel_data)
+
     nodeDataDic[node] = channelData
 
+    for i in storeData:
+      objectSave_callback(i)
 
-def getBlackelist():
+
+def getBlackelist(object_callback): #object_callback
   #print(channelData)
+  global objectSave_callback
+  objectSave_callback = object_callback
+
   moteList = NodeInfo.getnodeList()[:]
   #moteList.append(NodeInfo.getMainKey())
 

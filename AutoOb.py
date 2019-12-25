@@ -71,7 +71,7 @@ class AutoOb(threading.Thread):
 
       if((self.counter%5)==0) and (self.counter>=5):
         print "get in here\n"
-        getBlackelist() #get node blacklist data
+        getBlackelist(self.object_callback) #get node blacklist data_self.object_callback
 
         sent = checkChannel()
         logical = ChannelInfo.get_logicalUse()

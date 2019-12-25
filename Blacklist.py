@@ -7,6 +7,9 @@ from BlackPost import BlackPost
 from nodeBlack import getNodeBlack
 from MoteDataBlack import MoteDataBlack
 
+import logging
+log = logging.getLogger("Blacklist")
+
 counter = 200
 limit = 0.7
 sent = 0 #for reset channelSequence
@@ -53,12 +56,14 @@ def checkChannel():
     lastAck = avgData[i -phyRange][2] - last[i -phyRange][2]
     temp = tempAck / tempTx;
     if(tempTx>=counter) and (limit>temp):
-      print "Chek-----is badChannel-----{} : txCount_{},AckCount_{},lastTx_{},lastAck{}.__{:.2f}\n".format(i,tempTx,tempAck,lastTx,lastAck,temp)
+      #print "Chek-----is badChannel-----{} : txCount_{},AckCount_{},lastTx_{},lastAck{}.__{:.2f}\n".format(i,tempTx,tempAck,lastTx,lastAck,temp)
+      log.info("Chek-----is badChannel-----{} : txCount_{},AckCount_{},lastTx_{},lastAck{}.__{:.2f}\n".format(i,tempTx,tempAck,lastTx,lastAck,temp))
       badChannel.append(i)
       #channel.remove(i)
       sent = 1
     else:
-      print "Chek-----             -----{} : txCount_{},AckCount_{},lastTx_{},lastAck{}..__{:.2f}\n".format(i,tempTx,tempAck,lastTx,lastAck,temp)
+      #print "Chek-----             -----{} : txCount_{},AckCount_{},lastTx_{},lastAck{}..__{:.2f}\n".format(i,tempTx,tempAck,lastTx,lastAck,temp)
+      log.info("Chek-----             -----{} : txCount_{},AckCount_{},lastTx_{},lastAck{}..__{:.2f}\n".format(i,tempTx,tempAck,lastTx,lastAck,temp))
 
     last[i -phyRange][1] = avgData[i -phyRange][1]
     last[i -phyRange][2] = avgData[i -phyRange][2]
@@ -148,7 +153,8 @@ def getBlackelist(object_callback): #object_callback
 
   for item in nodeDataDic.keys():
     #print(nodeDataDic[item])
-    print("{} : {}".format(item,nodeDataDic[item]))
+    #print("{} : {}".format(item,nodeDataDic[item]))
+    log.info("{} : {}".format(item,nodeDataDic[item]))
 
 
 def makePayload():
@@ -178,6 +184,7 @@ def changeChannel():
 
  moteList = NodeInfo.getnodeList()[:]
  moteList.append(NodeInfo.getMainKey())
+ log.info("change channel finish\n")
 
  threads = []
  counterIn = 0

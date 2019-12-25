@@ -113,7 +113,8 @@ def topology_print(dictTemp, host):
     # Topology no change,but blacklist channelSize < scheduleLogical, need to reschedule
     print "here\n"
     if Blacklist.getChannelChanged() is 1:
-      print "reSchedule\n"
+      #print "reSchedule\n"
+      log.info("reSchedule\n")
       channelSize = Blacklist.getChannelSize()
       Blacklist.changeChannel()
 
@@ -140,6 +141,7 @@ def topology_print(dictTemp, host):
       ChannelInfo.set_logicalChannel(channelSize)
 
     # init channel list
+    log.info("Topology changed")
     ChannelInfo.initial_channel_list(True)
     SchedulePost.StartSchedule(NodeInfo.getNodeTable())
 

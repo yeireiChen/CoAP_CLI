@@ -10,6 +10,9 @@ import time
 import operator
 import re
 
+import logging
+log = logging.getLogger("TopologyTable")
+
 node_list = []          # save the node to list. 
 node_Name_list = []     # save the node name to list, not class.
 global_counter = 0      # save global queue.

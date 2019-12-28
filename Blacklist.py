@@ -10,8 +10,8 @@ from MoteDataBlack import MoteDataBlack
 import logging
 log = logging.getLogger("Blacklist")
 
-counter = 200
-limit = 0.7
+counter = 100
+limit = 0.75
 sent = 0 #for reset channelSequence
 lock = 0
 phyRange = 11
@@ -56,13 +56,10 @@ def checkChannel():
     lastAck = avgData[i -phyRange][2] - last[i -phyRange][2]
     temp = tempAck / tempTx;
     if(tempTx>=counter) and (limit>temp):
-      #print "Chek-----is badChannel-----{} : txCount_{},AckCount_{},lastTx_{},lastAck{}.__{:.2f}\n".format(i,tempTx,tempAck,lastTx,lastAck,temp)
       log.info("Chek-----is badChannel-----{} : txCount_{},AckCount_{},lastTx_{},lastAck{}.__{:.2f}\n".format(i,tempTx,tempAck,lastTx,lastAck,temp))
-      badChannel.append(i)
-      #channel.remove(i)
-      sent = 1
+      badChannel.append(i) ##noblack need to cancel
+      sent = 1 ##noblack need to cancel _ set to 0
     else:
-      #print "Chek-----             -----{} : txCount_{},AckCount_{},lastTx_{},lastAck{}..__{:.2f}\n".format(i,tempTx,tempAck,lastTx,lastAck,temp)
       log.info("Chek-----             -----{} : txCount_{},AckCount_{},lastTx_{},lastAck{}..__{:.2f}\n".format(i,tempTx,tempAck,lastTx,lastAck,temp))
 
     last[i -phyRange][1] = avgData[i -phyRange][1]
@@ -147,9 +144,14 @@ def getBlackelist(object_callback): #object_callback
   moteList = NodeInfo.getnodeList()[:]
   #moteList.append(NodeInfo.getMainKey())
 
+  count = 0
   for node in moteList:
-    time.sleep(0.2)
+    if(count==2):
+      time.sleep(2)
+      count = 0
+    #time.sleep(0.2)
     getNodeBlack(node,"/res/blacklist")
+    count+=1
 
   for item in nodeDataDic.keys():
     #print(nodeDataDic[item])

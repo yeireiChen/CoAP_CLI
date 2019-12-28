@@ -2,7 +2,12 @@ from bs4 import BeautifulSoup
 import requests
 import string
 import TopologyTable
+import time
 from core.nodeinfo import setNodeList
+from core.nodeinfo import getnodeList
+
+import logging
+log = logging.getLogger("GetMotes")
 
 
 def getAllMotes(host):
@@ -18,8 +23,14 @@ def getAllMotes(host):
   try:
     res = requests.get(hostStr) # get website data
   except:
-    print "Failed to get border-router link...  \nPlease wait a minutes, then try again."
-  # return motes_List
+    time.sleep(1)
+    res = requests.get(hostStr)
+    tempList = []
+    if(res==None):
+      tempList = getnodeList()[:]
+      #print "Failed to get border-router link...  \nPlease wait a minutes, then try again."
+      log.info("Failed to get border-router link...  \nPlease wait a minutes, then try again.")
+      return tempList
 
   soup = BeautifulSoup(res.text, 'html.parser')
   mote_tags = soup.find_all('li', class_="link") # find <li> html tag bind class name.

@@ -118,12 +118,14 @@ def topology_print(dictTemp, host):
     if Blacklist.getChannelChanged() is 1:
       #print "reSchedule\n"
       log.info("reSchedule\n")
+      
       channelSize = Blacklist.getChannelSize()
       Blacklist.changeChannel()
 
       ChannelInfo.set_logicalChannel(channelSize)
       ChannelInfo.initial_channel_list(True)
       SchedulePost.StartSchedule(NodeInfo.getNodeTable())
+      
 
     else:
       print "don't reSchedule\n"
@@ -270,10 +272,10 @@ def startPostScheduling():
   count = 0
   while (len(scheduleTable) > 0):
     for nodeKey in scheduleTable:
-      # if count is 2 :
-      #   time.sleep(2)
-      #   count = 0
-      # count += 1
+      if count is 2 :
+       time.sleep(2)
+       count = 0
+       count += 1
       #print(nodeKey)
       payload_data = scheduleTable[nodeKey]
       time.sleep(0.2)

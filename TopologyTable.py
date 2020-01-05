@@ -28,6 +28,10 @@ old_temp_list = []
 scheduleTable = {}
 old_scheuleTable = {}
 change_topology = -1
+slotframeSize = 151
+scheduleRanges = 15
+same = 0
+
 
 
 def set_table(host, topology_List):
@@ -51,7 +55,7 @@ def set_table(host, topology_List):
   topology_print(dictTemp, host)
 
 def topology_print(dictTemp, host):
-  global global_counter, node_list, node_Name_list, topology_list, temp_list
+  global global_counter, node_list, node_Name_list, topology_list, temp_list, same
   topology_list = []
   get_queue = 0
 
@@ -118,6 +122,7 @@ def topology_print(dictTemp, host):
     if Blacklist.getChannelChanged() is 1:
       #print "reSchedule\n"
       log.info("reSchedule\n")
+      same = 1
       
       channelSize = Blacklist.getChannelSize()
       Blacklist.changeChannel()
@@ -241,13 +246,19 @@ def slotPostControl(parentKey, childKey, send_count):
       # need to edit, trigger topology was changed.
 
 def startPostScheduling():
+  global same
   endASN = NodeInfo.getASN()
   resource = "slotframe"
   if endASN is not 0:
     # running 15 slotframe
-    endASN += 2265
-    if endASN % 10 is 0:
-      endASN += 1  
+    #endASN += 6040
+    if same == 1:
+      endASN = Blacklist.getBlackAsn()
+      same = 0
+    else:
+      endASN += (scheduleRanges*slotframeSize)
+    #if endASN % 10 is 0:
+      #endASN += 1  
     resource = "slotframe?asn="+str(endASN)
 
   # while (len(scheduleTable) > 0):

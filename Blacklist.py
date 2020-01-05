@@ -25,6 +25,9 @@ channelAckIndex=20
 channelSize = 0
 channelPayload = ""
 objectSave_callback = None
+slotframeSize = 151
+ranges = 60
+blackEndASN = 0
 
 last = [[0 for i in range(3)] for j in range(16)]
 
@@ -160,25 +163,33 @@ def getBlackelist(object_callback): #object_callback
 
 
 def makePayload():
- global channelPayload
+ global channelPayload,ranges,blackEndASN
  channelPayload = str(len(channel))
  for i in range(len(channel)):
  	channelPayload = channelPayload +" "+str(channel[i])
  
+def getBlackAsn():
+  global blackEndASN
+  return blackEndASN
 
 def changeChannel():
- global channelPayload,sent 
+ global channelPayload,sent,blackEndASN
  makePayload()
 
  sent = 0
  query = "blacklist?asn="
  blackEndASN = NodeInfo.getASN()
 
- if blackEndASN is not 0:
+ '''if blackEndASN is not 0:
   	# running 15 slotframe
   blackEndASN += 9060
   if blackEndASN % 10 is 0:
-   blackEndASN += 1
+   blackEndASN += 1'''
+ needPlus = slotframeSize - (blackEndASN%slotframeSize)
+
+ if(needPlus is not 0):
+  blackEndASN += needPlus
+  blackEndASN += (ranges*slotframeSize)
 
  query = query + str(blackEndASN)
  #print(query)

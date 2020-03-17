@@ -45,6 +45,8 @@ def message_callback(response):
 def getNodeBlack(node,path):
   global nodeName, return_flag, local_queue_numbers
   return_flag = 1 # to initialized value.
+  counter =0
+  flag =0
   
   global nodeName
   nodeName = node
@@ -60,15 +62,27 @@ def getNodeBlack(node,path):
       elapsed = time.time() - start
       print 'Watting time : %2.2f\r' % elapsed,
       if elapsed > 60 :
+        counter+=1
         coap_client.close()
         coap_client.get(path=src, callback=message_callback, timeout=60)
         start = time.time()
+        if counter>1:
+          return_flag = 0
+          flag = 1
 
-    coap_client.close()
-    elapsed = time.time() - start
-    print "\n%s  successful delivery, %.2f seconds." %(nodeName, elapsed-1)
+    #coap_client.close()
+    #elapsed = time.time() - start
+    #print "\n%s  successful delivery, %.2f seconds." %(nodeName, elapsed-1)
     #print "Got the local queue : %s " %(str(local_queue_numbers))
     #return int(local_queue_numbers)
+
+    if flag==1:
+      coap_client.close()
+      print nodeName +" did not successfully sent out"
+    else:
+      coap_client.close()
+      elapsed = time.time() - start
+      print "\n%s successfully delivery, %.2f seconds." %(nodeName,elapsed-1)
   except:
     if coap_client is not None:
       coap_client.close()

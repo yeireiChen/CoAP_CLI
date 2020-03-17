@@ -148,7 +148,8 @@ def topology_print(dictTemp, host):
     print '\n'
     if change_topology is not 0:
       channelSize = Blacklist.getChannelSize()
-      ChannelInfo.set_logicalChannel(channelSize)
+      if(channelSize!=0):
+        ChannelInfo.set_logicalChannel(channelSize)
 
     # init channel list
     log.info("Topology changed")
@@ -286,7 +287,7 @@ def startPostScheduling():
       if count is 2 :
        time.sleep(2)
        count = 0
-       count += 1
+      count += 1
       #print(nodeKey)
       payload_data = scheduleTable[nodeKey]
       time.sleep(0.2)

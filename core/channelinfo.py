@@ -17,7 +17,7 @@ def set_logicalChannel(numChannel):
 def initial_channel_list(Flag):
   global node_channel_list
   if Flag :
-    node_channel_list = [[0 for i in range(logical_channel)] for j in range(151)]
+    node_channel_list = [[0 for i in range(16)] for j in range(151)]
   
 def set_channel_list(childKey, parentKey, slot_numbers):
   global node_channel_list,logical_use

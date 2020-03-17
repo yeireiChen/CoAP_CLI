@@ -69,8 +69,19 @@ def checkChannel():
     last[i -phyRange][2] = avgData[i -phyRange][2]
 
   for i in badChannel: #remove badChannel in good channel list
-    if i in channel:
-      channel.remove(i)
+    if (len(channel)==1):
+      print "should not be here"
+      sent = 0
+    else:
+      if(len(badChannel)==1):
+        if( badChannel[0] in channel):
+          channel.remove(badChannel[0])
+      elif (len(badChannel)==2):
+        if( badChannel[0] in channel):
+          channel.remove(badChannel[0])
+      else:
+        print "should not be here"
+
 
   return sent
 
